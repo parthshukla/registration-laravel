@@ -25,16 +25,23 @@ class WelcomeMail extends Mailable
      */
     public $user;
 
+    /**
+     * @var string
+     */
+    public $token;
+
     //-------------------------------------------------------------------------
 
     /**
-     * Create a new message instance.
+     * Create a new message instance
      *
-     * @return void
+     * @param User $user
+     * @param string|null $token
      */
-    public function __construct(User $user)
+    public function __construct(User $user, string $token=null)
     {
         $this->user = $user;
+        $this->token = $token;
     }
 
     /**

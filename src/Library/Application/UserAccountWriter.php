@@ -4,9 +4,7 @@ namespace ParthShukla\Registration\Library\Application;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use ParthShukla\Registration\Events\UserRegistered;
-use ParthShukla\Registration\Mail\WelcomeMail;
 
 /**
  * UserAccountWriter class
@@ -24,16 +22,25 @@ class UserAccountWriter
      */
     protected $user;
 
+    /**
+     * Instance of TokenGenerator
+     *
+     * @var TokenGenerator
+     */
+    protected $tokenGenerator;
+
     //-------------------------------------------------------------------------
 
     /**
      * Constructor
      *
      * @param User $user
+     * @param TokenGenerator $tokenGenerator
      */
-    public function __construct(User $user)
+    public function __construct(User $user, TokenGenerator $tokenGenerator)
     {
         $this->user = $user;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     //-------------------------------------------------------------------------
@@ -54,8 +61,10 @@ class UserAccountWriter
         $this->user->date_of_birth = empty($data['dob']) ? null : $data['dob'];
         // saving the updated information
         $this->user->save();
+        //getting the user account validation token
+        $accountValidationToken = $this->tokenGenerator->getUserAccountVerificationToken($this->user->id);
         // sending mail to the user
-        event(new UserRegistered($this->user));//Mail::to($this->user->email)->send(new WelcomeMail($this->user));
+        event(new UserRegistered($this->user, $accountValidationToken));
         return true;
     }
 

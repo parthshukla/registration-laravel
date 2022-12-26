@@ -19,16 +19,29 @@ class UserRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * Instance of the user
+     *
+     * @var User
+     */
     public $user;
+
+    /**
+     * User account validation token
+     * 
+     * @var string|null
+     */
+    public $token;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, string $token = null)
     {
         $this->user = $user;
+        $this->token = $token;
     }
 
     //-------------------------------------------------------------------------

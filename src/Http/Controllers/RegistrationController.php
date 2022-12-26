@@ -2,7 +2,6 @@
 
 namespace ParthShukla\Registration\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use ParthShukla\Registration\Http\Requests\RegistrationRequest;
 use ParthShukla\Registration\Library\Application\UserAccountWriter;
@@ -55,24 +54,6 @@ class RegistrationController extends Controller
         return response(['message' => __('ps-register::general.account_created_failed')],
                         Response::HTTP_INTERNAL_SERVER_ERROR);
     }
-
-    //-------------------------------------------------------------------------
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
 }
 // end of class RegistrationController
 // end of file RegistrationController.php

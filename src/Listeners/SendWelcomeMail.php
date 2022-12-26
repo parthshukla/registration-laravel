@@ -32,7 +32,7 @@ class SendWelcomeMail
      */
     public function handle(UserRegistered $event)
     {
-        Mail::to($event->user->email)->send(new WelcomeMail($event->user));
+        Mail::to($event->user->email)->send(new WelcomeMail($event->user, $event->token));
     }
 }
 // end of class SendWelcomeMail

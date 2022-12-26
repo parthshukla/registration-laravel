@@ -23,8 +23,8 @@
                         </p>
                         <p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0 0 15px;">
                             Thank you for registering at {{env('APP_NAME')}}. Please validate your account
-                            by clicking on the <a href="{{route('register')}}">link</a>.
-                            It is valid for 10 minutes. You can also visit this link {{route('register')}} and validate
+                            by clicking on the <a href="{{route('account_validation', ['token' => $token])}}">link</a>.
+                            It is valid for 10 minutes. You can also visit this link {{route('account_validation', ['token' => $token])}} and validate
                             your account.
                         </p>
                     </td>
