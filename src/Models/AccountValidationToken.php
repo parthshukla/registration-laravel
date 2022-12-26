@@ -50,6 +50,21 @@ class AccountValidationToken extends Model
         return $this->where('user_id', $userId)->delete();
     }
 
+    //-------------------------------------------------------------------------
+
+    /**
+     * Scopes a query to only include tokens which are active
+     *
+     * @param $query
+     * @param int $tokenLifeTimeInSec
+     * @return void
+     */
+    public function scopeActiveToken($query, int $tokenLifeTimeInSec)
+    {
+        return $query->whereRaw('UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(created_at) <= '.$tokenLifeTimeInSec);
+    }
+
+
 }
 // end of class AccountValidationToken
 // end of file AccountValidationToken.php

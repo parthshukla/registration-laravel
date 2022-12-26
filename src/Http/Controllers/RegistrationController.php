@@ -4,6 +4,7 @@ namespace ParthShukla\Registration\Http\Controllers;
 
 use Illuminate\Http\Response;
 use ParthShukla\Registration\Http\Requests\RegistrationRequest;
+use ParthShukla\Registration\Library\Application\Account;
 use ParthShukla\Registration\Library\Application\UserAccountWriter;
 
 /**
@@ -23,16 +24,25 @@ class RegistrationController extends Controller
      */
     protected $userAccountWriter;
 
+    /**
+     * Instance of Account
+     *
+     * @var Account
+     */
+    protected $account;
+
     //-------------------------------------------------------------------------
 
     /**
      * Constructor
      *
      * @param UserAccountWriter $userAccountWriter
+     * @param Account $account
      */
-    public function __construct(UserAccountWriter $userAccountWriter)
+    public function __construct(UserAccountWriter $userAccountWriter, Account $account)
     {
         $this->userAccountWriter = $userAccountWriter;
+        $this->account = $account;
     }
 
     //-------------------------------------------------------------------------
@@ -53,6 +63,23 @@ class RegistrationController extends Controller
 
         return response(['message' => __('ps-register::general.account_created_failed')],
                         Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Method to handle request for validating a user account.
+     *
+     * @param string $token
+     * @return void
+     */
+    public function validateAccount(string $token)
+    {
+        if($this->account->validateUserAccount($token))
+        {
+            return response(['message' => __('ps-register::general.account_validation_success')], Response::HTTP_OK);
+        }
+        return response(['message' => __('ps-register::general.account_validation_failed')], Response::HTTP_BAD_REQUEST);
     }
 }
 // end of class RegistrationController
