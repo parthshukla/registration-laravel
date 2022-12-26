@@ -4,6 +4,7 @@ namespace ParthShukla\Registration\Library\Application;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use ParthShukla\Registration\Events\UserEmailValidated;
 use ParthShukla\Registration\Models\AccountValidationToken;
 
 /**
@@ -62,6 +63,9 @@ class Account
             $this->accountValidationToken->where('token', $token)->delete();
             //activating the user account
             $this->activateUserAccountViaEmail($result->user_id);
+            //sending account activation notification email
+            $user = $this->user->find($result->user_id);
+            event(new UserEmailValidated($user));
             return true;
         }
         return false;

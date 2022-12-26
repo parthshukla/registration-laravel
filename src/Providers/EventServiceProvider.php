@@ -2,7 +2,9 @@
 namespace ParthShukla\Registration\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use ParthShukla\Registration\Events\UserEmailValidated;
 use ParthShukla\Registration\Events\UserRegistered;
+use ParthShukla\Registration\Listeners\SendEmailVerifiedMail;
 use ParthShukla\Registration\Listeners\SendWelcomeMail;
 
 /**
@@ -18,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserRegistered::class => [
             SendWelcomeMail::class,
+        ],
+        UserEmailValidated::class => [
+            SendEmailVerifiedMail::class
         ]
     ];
 
