@@ -4,6 +4,7 @@ namespace ParthShukla\Registration\Library\Application;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use ParthShukla\Registration\Events\UserEmailValidated;
 use ParthShukla\Registration\Models\AccountValidationToken;
 
@@ -54,20 +55,35 @@ class Account
      */
     public function validateUserAccount(string $token):bool
     {
-        $result = $this->accountValidationToken->activeToken(config('ps-register.userAccountValidationTokenLifeTime'))
-            ->where('token', $token)->select('token', 'user_id')->first();
-
-        if($result)
+        if(config('ps-register.tokenStoredInCache')) // token is stored in redis cache
         {
+            $userId = Redis::get($token);
+            if($userId) {
+                // removing the key
+                Redis::del($token);
+            }
+
+        }
+        else // token is stored in db
+        {
+            $result = $this->accountValidationToken->activeToken(config('ps-register.userAccountValidationTokenLifeTime'))
+                ->where('token', $token)->select('token', 'user_id')->first();
+            $userId = ($result) ? $result->user_id : false;
             // disabling the token
             $this->accountValidationToken->where('token', $token)->delete();
-            //activating the user account
-            $this->activateUserAccountViaEmail($result->user_id);
-            //sending account activation notification email
-            $user = $this->user->find($result->user_id);
-            event(new UserEmailValidated($user));
-            return true;
         }
+
+        if($userId)
+            {
+                //activating the user account
+                $this->activateUserAccountViaEmail($userId);
+                //sending account activation notification email
+                $user = $this->user->find($userId);
+                event(new UserEmailValidated($user));
+                return true;
+            }
+
+
         return false;
     }
 
