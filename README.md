@@ -31,3 +31,28 @@ to user email which has been used for registering the user.
     "message": "Congratulations! Your account has been validated successfully."
 }
 ```
+
+### Storage Methods for Validation Token
+
+The validation token that will be generated after the successful registration of the
+user can be stored either in the DB or in the redis cache. This can be managed from the
+config file of the package. 
+
+The validation token lifetime can also be configured from the config files and 
+the value will be in seconds. The values that can be configured are:
+```phpt
+return [
+
+    'userAccountValidationTokenLifeTime' => env('USER_ACCOUNT_VALIDATION_TOKEN_LIFETIME',600),
+    'tokenStoredInCache' => false,
+
+];
+```
+* userAccountValidationTokenLifeTime - Sets the value of token life in seconds
+* tokenStoredInCache - if this value is true, token will be stored in redis cache
+
+For setting up the redis cache support in laravel, run the following:
+```
+composer required predis/predis
+```
+######Note: Please make sure that redis is installed in the machine 
