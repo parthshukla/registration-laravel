@@ -4,8 +4,10 @@ namespace ParthShukla\Registration\Http\Controllers;
 
 use Illuminate\Http\Response;
 use ParthShukla\Registration\Http\Requests\RegistrationRequest;
+use ParthShukla\Registration\Http\Requests\ValidateEmailRequest;
 use ParthShukla\Registration\Library\Application\Account;
 use ParthShukla\Registration\Library\Application\UserAccountWriter;
+
 
 /**
  * Registration class
@@ -80,6 +82,24 @@ class RegistrationController extends Controller
             return response(['message' => __('ps-register::general.account_validation_success')], Response::HTTP_OK);
         }
         return response(['message' => __('ps-register::general.account_validation_failed')], Response::HTTP_BAD_REQUEST);
+    }
+
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Handles request for sending the validation token
+     * 
+     * @var ValidateEMailRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function resendValidationToken(ValidateEmailRequest $request) {
+        
+        if($this->userAccountWriter->getAccountValidationToken($request->validated()))
+        {
+            return response(['message' => __('ps-register::general.account_validataion_link')], Response::HTTP_OK);
+        }
+        return response(['message' => __('ps-register::general.resend_account_validation_link_failed')], Response::HTTP_BAD_REQUEST);
     }
 }
 // end of class RegistrationController

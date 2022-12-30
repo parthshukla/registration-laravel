@@ -55,9 +55,12 @@ class Account
      */
     public function validateUserAccount(string $token):bool
     {
+        
         if(config('ps-register.tokenStoredInCache')) // token is stored in redis cache
         {
+            
             $userId = Redis::get($token);
+           
             if($userId) {
                 // removing the key
                 Redis::del($token);
@@ -66,13 +69,15 @@ class Account
         }
         else // token is stored in db
         {
+            
             $result = $this->accountValidationToken->activeToken(config('ps-register.userAccountValidationTokenLifeTime'))
                 ->where('token', $token)->select('token', 'user_id')->first();
             $userId = ($result) ? $result->user_id : false;
+            
             // disabling the token
             $this->accountValidationToken->where('token', $token)->delete();
         }
-
+        
         if($userId)
             {
                 //activating the user account
@@ -86,6 +91,48 @@ class Account
 
         return false;
     }
+
+
+    /**
+     * Method to validate a user account again
+     */
+    public function validateUserAccountAgain(string $token,int $userId) {
+       
+        if(config('ps-register.tokenStoredInCache')) // token is stored in redis cache
+        {
+           
+            $userId = Redis::get($token);
+            if($userId) {
+                // removing the key
+                Redis::del($token);
+            }
+
+        }
+        else // token is stored in db
+        {
+            $result = $this->accountValidationToken->activeToken(config('ps-register.userAccountValidationTokenLifeTime'))
+                ->where('token', $token)->select('token', 'user_id')->first();
+            $userId = ($result) ? $result->user_id : false;
+            
+            // disabling the token
+            $this->accountValidationToken->where('token', $token)->delete();
+        }
+
+        if($userId)
+            {
+                //activating the user account
+                $this->activateUserAccountViaEmail($userId);
+                //sending account activation notification email
+                $user = $this->user->find($userId);
+                //event(new UserEmailValidated($user));
+                return true;
+            }
+
+
+        return true;
+
+    }    
+
 
     //-------------------------------------------------------------------------
 
