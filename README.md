@@ -5,6 +5,8 @@ Registration-Laravel is package for implementing the registration workflow in a 
 ##### Registration
 - [Register User](#register-user)
 - [Validate User Email](#validate-user-email)
+- [Resend Validate Token](#resend-validate-token)
+
 
 ### <a name="register-user">Register User</a>
 This api end point will be used for registering a new user.
@@ -56,3 +58,20 @@ For setting up the redis cache support in laravel, run the following:
 composer required predis/predis
 ```
 ######Note: Please make sure that redis is installed in the machine 
+
+### Method for resend Validation Token 
+
+This method is used to resend the Validation Token for validate the user account
+
+### <a name="resend-validate-token">Resend validate token</a>
+This api end point is used for resend vaerification token.
+###### API End Point: /api/account/validation_token/resend
+###### Request Type: POST
+###### Request Body
+```
+{
+    "email": "test25@mail.com"
+}
+```
+
+
