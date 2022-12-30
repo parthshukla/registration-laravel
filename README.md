@@ -59,10 +59,6 @@ composer required predis/predis
 ```
 ######Note: Please make sure that redis is installed in the machine 
 
-### Method for resend Validation Token 
-
-This method is used to resend the Validation Token for validate the user account
-
 ### <a name="resend-validate-token">Resend validate token</a>
 This api end point is used for resend vaerification token.
 ###### API End Point: /api/account/validation_token/resend
