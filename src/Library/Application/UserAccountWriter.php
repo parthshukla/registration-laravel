@@ -65,9 +65,30 @@ class UserAccountWriter
         $accountValidationToken = $this->tokenGenerator->getUserAccountVerificationToken($this->user->id);
         // sending mail to the user
         event(new UserRegistered($this->user, $accountValidationToken));
-        return true;
+        return true;        
     }
 
+    //-------------------------------------------------------------------------
+
+    /**
+     * Sends account validation token via email
+     * 
+     * @var array $data
+     * @return boolean
+     */
+    public function getAccountValidationToken(array $data) :bool
+    {
+
+        $user = $this->user->where('email', '=', $data['email'])->first();
+
+        if($user->status == 'pending') {
+            $accountValidationToken = $this->tokenGenerator->getUserAccountVerificationToken($user->id);
+            event(new UserRegistered($user, $accountValidationToken));
+            return true;
+        }
+
+        return false;
+    } 
 }
 // end of class UserAccountWriter
 // end of file UserAccountWriter.php
