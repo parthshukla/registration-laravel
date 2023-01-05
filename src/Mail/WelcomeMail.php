@@ -30,6 +30,12 @@ class WelcomeMail extends Mailable
      */
     public $token;
 
+    /**
+     * @var int
+     * 
+     */
+    public $otp;
+
     //-------------------------------------------------------------------------
 
     /**
@@ -38,10 +44,11 @@ class WelcomeMail extends Mailable
      * @param User $user
      * @param string|null $token
      */
-    public function __construct(User $user, string $token=null)
+    public function __construct(User $user, string $token=null, $otp=null )
     {
         $this->user = $user;
         $this->token = $token;
+        $this->otp = $otp;
     }
 
     /**

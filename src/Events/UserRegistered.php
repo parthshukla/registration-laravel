@@ -38,10 +38,11 @@ class UserRegistered
      *
      * @return void
      */
-    public function __construct(User $user, string $token = null)
+    public function __construct(User $user, string $token = null, $otp = null)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->token = $token;
+        $this->otp   = $otp;
     }
 
     //-------------------------------------------------------------------------

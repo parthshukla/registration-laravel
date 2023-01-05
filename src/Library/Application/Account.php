@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use ParthShukla\Registration\Events\UserEmailValidated;
+use ParthShukla\Registration\Events\UserNumberValidated;
 use ParthShukla\Registration\Models\AccountValidationToken;
+use ParthShukla\Registration\Models\UsersOtpValidation;
 
 /**
  * Account class
@@ -25,6 +27,12 @@ class Account
     protected $accountValidationToken;
 
     /**
+     * Instance for UsersOtpValidation
+     * @var UsersOtpValidation
+     */
+    protected $usersOtpValidation;
+
+    /**
      * Instance of User
      *
      * @var User
@@ -39,10 +47,12 @@ class Account
      * @param AccountValidationToken $accountValidationToken
      * @param User $user
      */
-    public function __construct(AccountValidationToken $accountValidationToken, User $user)
+    public function __construct(AccountValidationToken $accountValidationToken, User $user, UsersOtpValidation $usersOtpValidation)
     {
         $this->accountValidationToken = $accountValidationToken;
         $this->user = $user;
+        $this->usersOtpValidation = $usersOtpValidation;
+
     }
 
     //-------------------------------------------------------------------------
@@ -91,6 +101,58 @@ class Account
 
         return false;
     }
+
+    //-------------------------------------------------------------------------
+
+     /**
+     * Method to validate a user account by taken otp
+     *
+     * @param string $otp
+     * @return bool
+     */
+    public function validateUserAccountViaOtp($otp):bool
+    {
+        
+        if(config('ps-register.otpStoredInCache')) // otp is stored in redis cache
+        {
+            
+            $userId = Redis::get($otp);
+           
+            if($userId) {
+                // removing the key
+                Redis::del($otp);
+            }
+
+        }
+        else // otp is stored in db
+        {
+            
+            $result = $this->usersOtpValidation->activeOtp(config('ps-register.userOtpLifeTime'))
+                ->where('otp', $otp)
+                ->select('otp', 'user_id')
+                ->first();
+            $userId = ($result) ? $result->user_id : false;
+            
+            // disabling the otp
+            $this->usersOtpValidation->where('otp', $otp)->delete();
+        }
+        
+        if($userId)
+            {
+                //activating the user account
+                $this->activateUserAccountViaOtp($userId);
+               
+                //sending account activation notification email
+                $user = $this->user->find($userId);
+                event(new UserNumberValidated($user));
+                return true;
+            }
+
+
+        return false;
+    }
+
+
 
 
     /**
@@ -148,6 +210,20 @@ class Account
         return $this->user->where('id', '=', $userId)
                 ->update([ 'email_verified_at' => DB::raw('NOW()'),
                     'status' => 'active']);
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Method to set the mobile verification field and change the user account
+     * status to active.
+     *
+     * @param int $userId
+     * @return mixed
+     */
+    private function activateUserAccountViaOtp(int $userId){
+        return $this->user->where('id', '=', $userId)
+        ->update([ 'mobile_verified_at' => DB::raw('NOW()'),
+            'status' => 'active']);
     }
 
 }

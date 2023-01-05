@@ -4,8 +4,13 @@ namespace ParthShukla\Registration\Providers;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use ParthShukla\Registration\Events\UserEmailValidated;
 use ParthShukla\Registration\Events\UserRegistered;
+use ParthShukla\Registration\Events\UserOtpEvent;
+use ParthShukla\Registration\Events\UserNumberValidated;
+
 use ParthShukla\Registration\Listeners\SendEmailVerifiedMail;
+use ParthShukla\Registration\Listeners\SendNumberVerifiedMail;
 use ParthShukla\Registration\Listeners\SendWelcomeMail;
+use ParthShukla\Registration\Listeners\SendOtpMail;
 
 /**
  * EventServiceProvider class
@@ -19,11 +24,18 @@ class EventServiceProvider extends ServiceProvider
 
     protected $listen = [
         UserRegistered::class => [
-            SendWelcomeMail::class,
+            SendWelcomeMail::class
         ],
         UserEmailValidated::class => [
             SendEmailVerifiedMail::class
-        ]
+        ],
+        UserOtpEvent::class => [
+            SendOtpMail::class
+        ],
+        UserNumberValidated::class => [
+            SendNumberVerifiedMail::class
+        ],
+        
     ];
 
     public function boot()
