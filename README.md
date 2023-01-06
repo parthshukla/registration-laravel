@@ -2,10 +2,32 @@
 
 Registration-Laravel is package for implementing the registration workflow in a laravel application.
 
+## Remarks
+Before go ahead use the User model changes. There are some columns which is necessary to add inside fillable method Such as:- 
+
+    'contact_number',
+    'country_code',
+    'mobile_verified_at'
+
+    like these
+
+     protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'status',
+        'contact_number',
+        'country_code',
+        'mobile_verified_at'
+    ];
+## Remarks End
+
 ##### Registration
 - [Register User](#register-user)
 - [Validate User Email](#validate-user-email)
 - [Resend Validate Token](#resend-validate-token)
+- [Resend Validate Otp](#resend-validate-otp)
+- [Validate User Mobile](#validate-user-mobile)
 
 
 ### <a name="register-user">Register User</a>
@@ -60,7 +82,7 @@ composer required predis/predis
 ######Note: Please make sure that redis is installed in the machine 
 
 ### <a name="resend-validate-token">Resend validate token</a>
-This api end point is used for resend vaerification token.
+This api end point is used for resend verification token.
 ###### API End Point: /api/account/validation_token/resend
 ###### Request Type: POST
 ###### Request Body
@@ -70,4 +92,27 @@ This api end point is used for resend vaerification token.
 }
 ```
 
+### <a name="resend-validate-otp">Validate User Mobile</a>
+This api end point is used for resend verification otp.
+###### API End Point: /api/account/validation_otp/resend
+###### Request Type: POST
+###### Request Body
+```
+{
+    "contact_number": "9988776655"
+}
+```
 
+
+
+### <a name="validate-user-mobile">Resend validate otp</a>
+This api will be used to validate the user contact number, by verifying the otp that has been sent
+to user contact number which has been used for registering the user.
+###### API End Point: /api/validate_account_via_otp
+###### Request Type: POST
+###### Request Body
+```
+{
+    "otp": "2345"
+}
+```
