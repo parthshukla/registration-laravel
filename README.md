@@ -92,7 +92,7 @@ This api end point is used for resend verification token.
 }
 ```
 
-### <a name="resend-validate-otp">Validate User Mobile</a>
+### <a name="resend-validate-otp">Resend validate otp</a>
 This api end point is used for resend verification otp.
 ###### API End Point: /api/account/validation_otp/resend
 ###### Request Type: POST
@@ -105,7 +105,7 @@ This api end point is used for resend verification otp.
 
 
 
-### <a name="validate-user-mobile">Resend validate otp</a>
+### <a name="validate-user-mobile">Validate User Mobile</a>
 This api will be used to validate the user contact number, by verifying the otp that has been sent
 to user contact number which has been used for registering the user.
 ###### API End Point: /api/validate_account_via_otp
