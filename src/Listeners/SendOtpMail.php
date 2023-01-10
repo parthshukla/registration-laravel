@@ -2,17 +2,18 @@
 namespace ParthShukla\Registration\Listeners;
 
 use Illuminate\Support\Facades\Mail;
+use ParthShukla\Registration\Events\UserOtpEvent;
 use ParthShukla\Registration\Events\UserRegistered;
-use ParthShukla\Registration\Mail\WelcomeMail;
+use ParthShukla\Registration\Mail\OtpMail;
 
 /**
- * SendWelcomeMail listener class.
+ * SendOtpMail listener class.
  *
  * @since 1.0.0
  * @version 1.0.0
  * @author Parth Shukla <shuklaparth@hotmail.com>
  */
-class SendWelcomeMail
+class SendOtpMail
 {
     /**
      * Create the event listener.
@@ -30,10 +31,10 @@ class SendWelcomeMail
      * @param  object  $event
      * @return void
      */
-    public function handle(UserRegistered $event)
+    public function handle(UserOtpEvent $event)
     {
-        Mail::to($event->user->email)->send(new WelcomeMail($event->user, $event->token, $event->otp));
+        Mail::to($event->user->email)->send(new OtpMail($event->user,$event->otp));
     }
 }
-// end of class SendWelcomeMail
-// end of file SendWelcomeMail.php
+// end of class SendOtpMail
+// end of file SendOtpMail.php

@@ -5,9 +5,11 @@ namespace ParthShukla\Registration\Http\Controllers;
 use Illuminate\Http\Response;
 use ParthShukla\Registration\Http\Requests\RegistrationRequest;
 use ParthShukla\Registration\Http\Requests\ValidateEmailRequest;
+use ParthShukla\Registration\Http\Requests\ValidateMobileRequest;
+use ParthShukla\Registration\Http\Requests\ValidateOtpRequest;
 use ParthShukla\Registration\Library\Application\Account;
 use ParthShukla\Registration\Library\Application\UserAccountWriter;
-
+use Illuminate\Http\Request;
 
 /**
  * Registration class
@@ -57,6 +59,7 @@ class RegistrationController extends Controller
      */
     public function store(RegistrationRequest $request)
     {
+        
         if($this->userAccountWriter->create($request->validated()))
         {
             return response(['message' => __('ps-register::general.account_created_success')],
@@ -88,6 +91,26 @@ class RegistrationController extends Controller
     //-------------------------------------------------------------------------
 
     /**
+     * Handles request for sending the otp
+     * 
+     * @var ValidateOtpRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function validateAccountViaOtp(ValidateOtpRequest $request)
+    {
+         
+        if($this->account->validateUserAccountViaOtp($request->validated()))
+        {
+            return response(['message' => __('ps-register::general.account_validation_success')], Response::HTTP_OK);
+        }
+        return response(['message' => __('ps-register::general.account_validation_failed')], Response::HTTP_BAD_REQUEST);
+
+    }
+
+
+    //-------------------------------------------------------------------------
+
+    /**
      * Handles request for sending the validation token
      * 
      * @var ValidateEMailRequest $request
@@ -101,6 +124,23 @@ class RegistrationController extends Controller
         }
         return response(['message' => __('ps-register::general.resend_account_validation_link_failed')], Response::HTTP_BAD_REQUEST);
     }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Handle request for sending otp
+     * @var ValidateMobileRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function resendValidationOtp(ValidateMobileRequest $request) {
+        
+        if($this->userAccountWriter->getAccountValidationOtp($request->validated()))
+        {
+            return response(['message' => __('ps-register::general.otp_send_success')], Response::HTTP_OK);
+        }
+        return response(['message' => __('ps-register::general.resend_account_validation_link_failed')], Response::HTTP_BAD_REQUEST);
+    }
+
 }
 // end of class RegistrationController
 // end of file RegistrationController.php

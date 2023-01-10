@@ -9,13 +9,13 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * UserRegistered event class.
+ * UserOtpEvent event class.
  *
  * @since 1.0.0
  * @version 1.0.0
  * @author Parth Shukla <shuklaparth@ahex.co.in>
  */
-class UserRegistered
+class UserOtpEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -27,21 +27,19 @@ class UserRegistered
     public $user;
 
     /**
-     * User account validation token
+     * User account otp
      * 
      * @var string|null
      */
-    public $token;
-
+    public $otp;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, string $token = null, $otp = null)
+    public function __construct(User $user, $otp = null)
     {
         $this->user  = $user;
-        $this->token = $token;
         $this->otp   = $otp;
     }
 
@@ -57,5 +55,5 @@ class UserRegistered
         return new PrivateChannel('channel-name');
     }
 }
-// end of class UserRegistered
-// end of file UserRegistered.php
+// end of class UserOtpEvent
+// end of file UserOtpEvent.php

@@ -9,40 +9,32 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * UserRegistered event class.
+ * UserNumberValidated
  *
  * @since 1.0.0
  * @version 1.0.0
  * @author Parth Shukla <shuklaparth@ahex.co.in>
  */
-class UserRegistered
+class UserNumberValidated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Instance of the user
-     *
+     * Instance of User
      * @var User
      */
     public $user;
 
-    /**
-     * User account validation token
-     * 
-     * @var string|null
-     */
-    public $token;
+    //-------------------------------------------------------------------------
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, string $token = null, $otp = null)
+    public function __construct(User $user)
     {
-        $this->user  = $user;
-        $this->token = $token;
-        $this->otp   = $otp;
+        $this->user = $user;
     }
 
     //-------------------------------------------------------------------------
@@ -57,5 +49,5 @@ class UserRegistered
         return new PrivateChannel('channel-name');
     }
 }
-// end of class UserRegistered
-// end of file UserRegistered.php
+// end of class UserNumberValidated
+// end of file UserNumberValidated.php

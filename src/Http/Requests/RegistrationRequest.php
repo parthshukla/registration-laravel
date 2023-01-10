@@ -39,7 +39,8 @@ class RegistrationRequest extends FormRequest
                                 ->symbols()],
             'name' => 'required|max:255',
             'dob' => 'nullable|date_format:Y-m-d',
-            'gender' => 'nullable|in:male,female,other'
+            'gender' => 'nullable|in:male,female,other',
+            'contact_number'=>'required|numeric|min:10'
         ];
     }
 }

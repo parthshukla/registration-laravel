@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
  * @version 1.0.0
  * @author Parth Shukla <shuklaparth@hotmail.com>
  */
-class WelcomeMail extends Mailable
+class OtpMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -25,10 +25,6 @@ class WelcomeMail extends Mailable
      */
     public $user;
 
-    /**
-     * @var string
-     */
-    public $token;
 
     /**
      * @var int
@@ -44,10 +40,9 @@ class WelcomeMail extends Mailable
      * @param User $user
      * @param string|null $token
      */
-    public function __construct(User $user, string $token=null, $otp=null )
+    public function __construct(User $user, $otp=null )
     {
         $this->user = $user;
-        $this->token = $token;
         $this->otp = $otp;
     }
 
@@ -58,8 +53,8 @@ class WelcomeMail extends Mailable
      */
     public function build()
     {
-        return $this->view('ps-register::emails.registration.welcome');
+        return $this->view('ps-register::emails.registration.otp');
     }
 }
 // end of class RegistrationSuccess
-// end of file WelcomeMail.php
+// end of file OtpMail.php

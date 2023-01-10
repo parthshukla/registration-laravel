@@ -10,7 +10,7 @@ return [
     'account_validation_success' => 'Congratulations! Your account has been validated successfully.',
     'account_validation_failed' => 'Oops! Something went wrong. Either your token is expired or is not valid.',
     'account_validataion_link' => 'Activation link has been sent in your mail. Please verify your account by visiting the link.',
-    'resend_account_validation_link_failed' => 'Your account is already verified.'
+    'resend_account_validation_link_failed' => 'Your account is already verified.',
 
-
+    'otp_send_success'=> 'Otp has been sent to your mail id.'
 ];
