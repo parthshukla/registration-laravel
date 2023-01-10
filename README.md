@@ -81,8 +81,8 @@ composer required predis/predis
 ```
 ######Note: Please make sure that redis is installed in the machine 
 
-### <a name="resend-validate-token">Resend validate token</a>
-This api end point is used for resend verification token.
+### <a name="resend-validate-token">Resend validation token</a>
+This api end point is used for resending the verification token.
 ###### API End Point: /api/account/validation_token/resend
 ###### Request Type: POST
 ###### Request Body
@@ -92,8 +92,8 @@ This api end point is used for resend verification token.
 }
 ```
 
-### <a name="resend-validate-otp">Resend validate otp</a>
-This api end point is used for resend verification otp.
+### <a name="resend-validate-otp">Resend validation otp</a>
+This api end point is used for resending verification otp.
 ###### API End Point: /api/account/validation_otp/resend
 ###### Request Type: POST
 ###### Request Body
